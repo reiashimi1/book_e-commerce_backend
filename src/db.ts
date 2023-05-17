@@ -1,20 +1,24 @@
 import { Sequelize } from "sequelize-typescript";
+import { User } from "./models/User";
 
 const sequelize = new Sequelize({
   username: "postgres",
-  password: "5664",
-  database: "postgres",
+  password: "postgres",
+  database: "book_database",
   host: "localhost",
   dialect: "postgres",
 });
 
+sequelize.addModels([User]);
+
 const dbConn = {
-  testConnection: async () => {
+  getConnection: () => {
     try {
-      await sequelize.authenticate();
+      sequelize.authenticate().then(() => console.log("Session established"));
     } catch (error) {
       console.error("Unable to connect to the database:", error);
     }
+    return sequelize;
   },
 };
 

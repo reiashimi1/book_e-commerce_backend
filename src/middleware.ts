@@ -1,23 +1,26 @@
-import { RequestHandler } from "express";
+import { NextFunction, Request, Response } from 'express';
+import jwt from 'jsonwebtoken';
+import { User } from './models/User';
 
-const auth: RequestHandler = async (req, res, next) => {
+interface CustomRequest extends Request {
+  token?: string;
+  user?: User;
+}
+
+const auth = async (req: CustomRequest, res: Response, next: NextFunction) => {
   try {
-    // const token = req.header('Authorization').replace('Bearer ', '');
-    // const decoded = jwt.verify(token, 'thisissomething');
-    // const user = await User.findOne({_id: decoded._id, 'tokens.token': token});
-    //
-    // if (!user) {
-    //   throw new Error();
-    // }
-    //
-    // req.token = token;
-    // req.user = user;
-    // next();
+    const token = req.header('Authorization')?.replace('Bearer ', '');
+    const decodedId = jwt.verify(token as string, 'myApplication');
+    const user = await User.findOne({ where: { id: decodedId } });
+    if (!user) {
+      throw new Error('User could not be found');
+    }
+    req.token = token;
+    req.user = user;
+    next();
   } catch (e) {
-    res.status(401).send({ error: "Please authenticate" });
+    res.status(401).send({ error: 'Please authenticate' });
   }
 };
 
-//refresh token tabela - id, refreshToken (Random Number), userId, expiresAt (psh 1 dite),
-//pastaj krijon access token, dhe ben me jwt id e refresh token
-module.exports = auth;
+export default auth;

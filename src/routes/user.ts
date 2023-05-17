@@ -1,20 +1,21 @@
-import { Router } from "express";
-import { getUsers } from "../controllers/user";
+import { Router } from 'express';
+import { getUsers } from '../controllers/user';
+import auth from '../middleware';
 
 const router = Router();
 
 // move the functions to the controllers directory
-router.get("/", getUsers);
+router.get('/', getUsers);
 
-router.post("/", (req, res) => {
+router.post('/', (req, res) => {
   res.send(req.body);
 });
 
-router.patch("/", (req, res) => {
+router.patch('/', (req, res) => {
   res.send(req.body);
 });
 
-router.delete("/", (req, res) => {
+router.delete('/', (req, res) => {
   res.send(req.body);
 });
 
