@@ -1,8 +1,12 @@
 import { Router } from 'express';
-import { getUsers } from '../controllers/user';
-import auth from '../middleware';
+import { getUsers, loginUser, registerUser } from '../controllers/user';
+import userMiddleware from '../middleware/userMiddleware';
 
 const router = Router();
+
+router.post('/users/register', registerUser);
+
+router.post('/login', loginUser);
 
 // move the functions to the controllers directory
 router.get('/', getUsers);

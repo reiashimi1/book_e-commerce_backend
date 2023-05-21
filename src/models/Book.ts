@@ -10,7 +10,7 @@ import {
 } from 'sequelize-typescript';
 
 @Table
-export class Book extends Model {
+export default class Book extends Model {
   @IsUUID(4)
   @PrimaryKey
   @Column(DataType.INTEGER)

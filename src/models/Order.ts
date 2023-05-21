@@ -7,30 +7,31 @@ import {
   IsUUID,
   CreatedAt,
   UpdatedAt,
-  HasOne,
-  IsIn,
-  Default
+  BelongsTo,
+  ForeignKey
 } from 'sequelize-typescript';
-import { Book } from '@models/Book';
-import { User } from '@models/User';
+import Book from './Book';
+import User from './User';
 
 @Table
-export class Order extends Model {
+export default class Order extends Model {
   @IsUUID(4)
   @PrimaryKey
-  @Column(DataType.INTEGER)
+  @Column(DataType.UUID)
   id!: number;
 
-  @HasOne(() => User)
-  user?: User;
+  @ForeignKey(() => User)
+  @Column(DataType.UUID)
+  userId!: number;
 
-  @HasOne(() => Book)
-  book?: Book;
+  @BelongsTo(() => User, 'id')
+  user!: User;
 
-  @Column(DataType.STRING)
-  @IsIn({ msg: 'Must be one of the following...', args: [['pending', 'confirmed', 'canceled']] })
-  @Default('pending')
-  status!: string;
+  @BelongsTo(() => Book, 'id')
+  book!: Book;
+
+  @Column(DataType.ENUM('pending', 'confirmed', 'canceled'))
+  status!: 'pending' | 'confirmed' | 'canceled';
 
   @Column(DataType.DOUBLE)
   totalAmount?: number;

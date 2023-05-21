@@ -7,19 +7,20 @@ import {
   IsUUID,
   CreatedAt,
   UpdatedAt,
-  HasOne
+  ForeignKey
 } from 'sequelize-typescript';
-import { User } from '@models/User';
+import User from './User';
 
 @Table
-export class Address extends Model {
+export default class Address extends Model {
   @IsUUID(4)
   @PrimaryKey
   @Column(DataType.INTEGER)
   id!: number;
 
-  @HasOne(() => User)
-  user!: User;
+  @ForeignKey(() => User)
+  @Column(DataType.UUID)
+  userId!: number;
 
   @Column(DataType.STRING)
   name?: string;

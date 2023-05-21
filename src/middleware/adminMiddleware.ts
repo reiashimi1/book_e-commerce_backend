@@ -1,17 +1,17 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import { User } from './models/User';
+import { AdminUser } from '@models/AdminUser';
 
 interface CustomRequest extends Request {
   token?: string;
-  user?: User;
+  user?: AdminUser;
 }
 
 const auth = async (req: CustomRequest, res: Response, next: NextFunction) => {
   try {
     const token = req.header('Authorization')?.replace('Bearer ', '');
     const decodedId = jwt.verify(token as string, 'myApplication');
-    const user = await User.findOne({ where: { id: decodedId } });
+    const user = await AdminUser.findOne({ where: { id: decodedId } });
     if (!user) {
       throw new Error('User could not be found');
     }
