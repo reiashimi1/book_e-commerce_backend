@@ -13,7 +13,10 @@ import {
 export default class Book extends Model {
   @IsUUID(4)
   @PrimaryKey
-  @Column(DataType.INTEGER)
+  @Column({
+    type: DataType.UUID,
+    defaultValue: DataType.UUIDV4
+  })
   id!: number;
 
   @Column(DataType.STRING)

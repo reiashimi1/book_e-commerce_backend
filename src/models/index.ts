@@ -1,15 +1,16 @@
 import { Sequelize } from 'sequelize-typescript';
-import User from './models/User';
-import Order from './models/Order';
-import Book from './models/Book';
-import Address from './models/Address';
+import User from './User';
+import Order from './Order';
+import Book from './Book';
+import Address from './Address';
 
 const sequelize = new Sequelize({
   username: 'postgres',
   password: 'postgres',
   database: 'book_database',
   host: 'localhost',
-  dialect: 'postgres'
+  dialect: 'postgres',
+  logging: false
 });
 
 sequelize.addModels([User, Order, Book, Address]);

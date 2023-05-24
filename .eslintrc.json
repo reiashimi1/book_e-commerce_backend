@@ -8,7 +8,10 @@
     "eslint:recommended",
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
-    "prettier"
+    "prettier",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:jsx-a11y/recommended"
   ],
   "overrides": [
   ],
@@ -18,8 +21,8 @@
     "sourceType": "module"
   },
   "plugins": [
-    "react",
-    "@typescript-eslint"
+    "@typescript-eslint",
+    "eslint-import-resolver-custom-alias"
   ],
   "rules": {
     "prettier/prettier": [
@@ -29,4 +32,16 @@
       }
     ]
   }
+//  "settings": {
+//    "import/resolver": {
+//      "eslint-import-resolver-custom-alias": {
+//        "alias": {
+//          "@models": "./src/models",
+//          "@controllers": "./src/controllers",
+//          "@routes": "./src/routes"
+//        },
+//        "extensions": [".ts", ".tsx"]
+//      }
+//    }
+//  }
 }

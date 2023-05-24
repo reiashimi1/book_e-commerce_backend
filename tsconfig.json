@@ -16,12 +16,12 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "baseUrl": "./src",
-    "paths": {
-      "@models/*": ["models/*"],
-      "@controllers/*": ["./src/controllers/*"],
-      "@routes/*": ["./src/routes/*"]
-    }
+//    "baseUrl": "./src",
+//    "paths": {
+//      "@models/*": ["./models/*"],
+//      "@controllers/*": ["./controllers/*"],
+//      "@routes/*": ["./routes/*"]
+//    }
   },
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]

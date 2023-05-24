@@ -11,10 +11,15 @@ import {
   Length
 } from 'sequelize-typescript';
 
+const saltRounds = Number(process.env.SALT_KEY);
+
 @Table
 export class AdminUser extends Model {
   @IsUUID(4)
-  @PrimaryKey
+  @Column({
+    type: DataType.UUID,
+    defaultValue: DataType.UUIDV4
+  })
   @Column(DataType.INTEGER)
   id!: number;
 

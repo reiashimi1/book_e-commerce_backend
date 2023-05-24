@@ -1,36 +1,49 @@
+import * as bcrypt from 'bcrypt';
 import { RequestHandler } from 'express';
 import User from '../models/User';
-import jwt from 'jsonwebtoken';
-import { genSaltSync, hashSync } from 'bcrypt';
 
 export const registerUser: RequestHandler = async (req, res) => {
-  const { email, password, firstName, lastName } = req.body;
-  const hashedPassword = hashSync(password, 8);
   try {
-    const user = new User({ email, password: hashedPassword, firstName, lastName });
-    await user.save();
-    res.status(200).send({ message: 'User created successfully' });
+    const { email, password, firstName, lastName } = req.body;
+    await User.create({ email, password, firstName, lastName });
+    return res.status(200).send({
+      message: 'User created successfully'
+    });
   } catch (e) {
-    res.status(400).send(e);
+    return res.status(500).send(e);
   }
 };
 
 export const loginUser: RequestHandler = async (req, res) => {
-  const { email, password } = req.body;
-  const hashedPassword = hashSync(password, 8);
   try {
-    const user = await User.findOne({ where: { email, password: hashedPassword } });
-    let token;
-    if (user) {
-      token = user.generateAccessToken();
+    const { email, password } = req.body;
+    const user = await User.findOne({ where: { email } });
+    if (user && bcrypt.compareSync(password, user?.password)) {
+      const token = user.generateAccessToken();
+      return res.status(200).send({ message: 'User logged in successfully', token });
+    } else {
+      return res.status(400).send({ message: 'Something went wrong' });
     }
-    res.status(200).send({ user, token });
   } catch (e) {
-    res.status(400).send();
+    return res.status(500).send();
   }
 };
 
-export const getUsers: RequestHandler = async (req, res) => {
-  const users: Array<User> = await User.findAll();
-  res.status(200).json({ message: 'success', data: { users } });
+export const getCurrentUser: RequestHandler = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const user = await User.findOne({ where: { id } });
+    if (user) {
+      return res.status(200).json({ message: 'Success', data: { user } });
+    } else {
+      return res.status(404).json({ message: 'User not found' });
+    }
+  } catch (e) {
+    return res.status(500).send();
+  }
 };
+
+// export const getUsers: RequestHandler = async (req, res) => {
+//   const users: Array<User> = await User.findAll();
+//   res.status(200).json({ message: 'success', data: { users } });
+// };

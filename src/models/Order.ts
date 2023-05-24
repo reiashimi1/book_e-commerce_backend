@@ -17,7 +17,10 @@ import User from './User';
 export default class Order extends Model {
   @IsUUID(4)
   @PrimaryKey
-  @Column(DataType.UUID)
+  @Column({
+    type: DataType.UUID,
+    defaultValue: DataType.UUIDV4
+  })
   id!: number;
 
   @ForeignKey(() => User)

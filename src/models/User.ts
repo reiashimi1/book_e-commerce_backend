@@ -14,16 +14,21 @@ import {
   BeforeDestroy,
   HasMany
 } from 'sequelize-typescript';
-import bcrypt from 'bcrypt';
 import Address from './Address';
 import jwt from 'jsonwebtoken';
 import Order from './Order';
+import * as bcrypt from 'bcrypt';
+
+const saltRounds = Number(process.env.SALT_KEY);
 
 @Table
 export default class User extends Model {
   @IsUUID(4)
   @PrimaryKey
-  @Column(DataType.UUID)
+  @Column({
+    type: DataType.UUID,
+    defaultValue: DataType.UUIDV4
+  })
   id!: string;
 
   @Unique
@@ -46,6 +51,9 @@ export default class User extends Model {
   @HasMany(() => Order, 'id')
   orders?: Order[];
 
+  @HasMany(() => Address, 'id')
+  addresses?: Address[];
+
   @CreatedAt
   creationDate?: Date;
 
@@ -56,7 +64,8 @@ export default class User extends Model {
   @BeforeUpdate
   static async hashPassword(currentUser: User) {
     if (currentUser.changed('password') && !!currentUser.password) {
-      const hashedPassword = bcrypt.hashSync(currentUser.password, 8);
+      const salt = await bcrypt.genSalt(saltRounds);
+      const hashedPassword = bcrypt.hashSync(currentUser.password, salt);
       currentUser.password = hashedPassword;
     }
   }
@@ -69,7 +78,11 @@ export default class User extends Model {
   }
 
   generateAccessToken = (): string => {
-    const token = jwt.sign({ userId: this.id }, 'myApplication', { expiresIn: '24h' });
-    return token;
+    console.log(this.id, 'id');
+    const jwtToken = jwt.sign({ id: this.id }, 'myApplication', { expiresIn: '24h' });
+    this.token = jwtToken;
+    console.log('----------------------------------------------------------------');
+    console.log(jwtToken, 'token');
+    return jwtToken;
   };
 }

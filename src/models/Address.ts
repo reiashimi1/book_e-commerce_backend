@@ -15,7 +15,10 @@ import User from './User';
 export default class Address extends Model {
   @IsUUID(4)
   @PrimaryKey
-  @Column(DataType.INTEGER)
+  @Column({
+    type: DataType.UUID,
+    defaultValue: DataType.UUIDV4
+  })
   id!: number;
 
   @ForeignKey(() => User)
