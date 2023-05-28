@@ -8,10 +8,12 @@ import {
   CreatedAt,
   UpdatedAt,
   BelongsTo,
-  ForeignKey
+  ForeignKey,
+  HasOne
 } from 'sequelize-typescript';
 import Book from './Book';
 import User from './User';
+import Address from './Address';
 
 @Table
 export default class Order extends Model {
@@ -21,23 +23,39 @@ export default class Order extends Model {
     type: DataType.UUID,
     defaultValue: DataType.UUIDV4
   })
-  id!: number;
+  id!: string;
 
   @ForeignKey(() => User)
   @Column(DataType.UUID)
-  userId!: number;
+  userId!: string;
 
   @BelongsTo(() => User, 'id')
   user!: User;
 
+  @ForeignKey(() => User)
+  @Column(DataType.UUID)
+  bookId!: string;
+
   @BelongsTo(() => Book, 'id')
   book!: Book;
 
-  @Column(DataType.ENUM('pending', 'confirmed', 'canceled'))
+  @Column(DataType.STRING)
+  addressId?: string;
+
+  @HasOne(() => Address, 'id')
+  address?: Address;
+
+  @Column({
+    type: DataType.ENUM('pending', 'confirmed', 'canceled'),
+    defaultValue: 'pending'
+  })
   status!: 'pending' | 'confirmed' | 'canceled';
 
   @Column(DataType.DOUBLE)
   totalAmount?: number;
+
+  @Column(DataType.DOUBLE)
+  shippingCost?: number;
 
   @CreatedAt
   creationDate?: Date;

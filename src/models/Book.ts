@@ -17,7 +17,7 @@ export default class Book extends Model {
     type: DataType.UUID,
     defaultValue: DataType.UUIDV4
   })
-  id!: number;
+  id!: string;
 
   @Column(DataType.STRING)
   title?: string;

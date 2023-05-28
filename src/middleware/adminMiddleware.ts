@@ -1,25 +1,23 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import { AdminUser } from '@models/AdminUser';
-
-interface CustomRequest extends Request {
-  token?: string;
-  user?: AdminUser;
-}
+import User from '../models/User';
+import { CustomRequest, JwtPayloadWithUser } from './types';
 
 const auth = async (req: CustomRequest, res: Response, next: NextFunction) => {
   try {
     const token = req.header('Authorization')?.replace('Bearer ', '');
-    const decodedId = jwt.verify(token as string, 'myApplication');
-    const user = await AdminUser.findOne({ where: { id: decodedId } });
+    const decodedId = jwt.verify(token as string, 'myApplication') as JwtPayloadWithUser;
+    const user = await User.findOne({ where: { id: decodedId?.id } });
     if (!user) {
-      throw new Error('User could not be found');
+      return res.status(401).send({ error: 'Please authenticate' });
     }
-    req.token = token;
+    if (user?.role !== 'admin') {
+      return res.status(403).send({ error: 'Not authorized' });
+    }
     req.user = user;
     next();
   } catch (e) {
-    res.status(401).send({ error: 'Please authenticate' });
+    return res.status(400).send({ error: 'Please authenticate' });
   }
 };
 

@@ -30,7 +30,7 @@ export default class User extends Model {
     defaultValue: DataType.UUIDV4
   })
   id!: string;
-
+  // Add an image column
   @Unique
   @Column(DataType.STRING)
   email!: string;
@@ -48,10 +48,13 @@ export default class User extends Model {
   @Column(DataType.STRING)
   token?: string;
 
+  @Column(DataType.ENUM('customer', 'admin'))
+  role!: 'customer' | 'admin';
+
   @HasMany(() => Order, 'id')
   orders?: Order[];
 
-  @HasMany(() => Address, 'id')
+  @HasMany(() => Address)
   addresses?: Address[];
 
   @CreatedAt
@@ -78,11 +81,8 @@ export default class User extends Model {
   }
 
   generateAccessToken = (): string => {
-    console.log(this.id, 'id');
     const jwtToken = jwt.sign({ id: this.id }, 'myApplication', { expiresIn: '24h' });
     this.token = jwtToken;
-    console.log('----------------------------------------------------------------');
-    console.log(jwtToken, 'token');
     return jwtToken;
   };
 }

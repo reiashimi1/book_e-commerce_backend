@@ -7,7 +7,8 @@ import {
   IsUUID,
   CreatedAt,
   UpdatedAt,
-  ForeignKey
+  ForeignKey,
+  BelongsTo
 } from 'sequelize-typescript';
 import User from './User';
 
@@ -19,11 +20,14 @@ export default class Address extends Model {
     type: DataType.UUID,
     defaultValue: DataType.UUIDV4
   })
-  id!: number;
+  id!: string;
 
   @ForeignKey(() => User)
   @Column(DataType.UUID)
-  userId!: number;
+  userId!: string;
+
+  @BelongsTo(() => User)
+  user!: User;
 
   @Column(DataType.STRING)
   name?: string;
