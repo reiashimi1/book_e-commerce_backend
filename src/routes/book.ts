@@ -7,7 +7,7 @@ const router = Router();
 
 router.get('/all', userMiddleware, getAll);
 
-router.post('/:id/create', adminMiddleware, createBook);
+router.post('/create', adminMiddleware, createBook);
 
 router.patch('/:id/update', adminMiddleware, updateBook);
 

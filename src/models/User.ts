@@ -51,10 +51,10 @@ export default class User extends Model {
   @Column(DataType.ENUM('customer', 'admin'))
   role!: 'customer' | 'admin';
 
-  @HasMany(() => Order, 'id')
+  @HasMany(() => Order, 'userId')
   orders?: Order[];
 
-  @HasMany(() => Address)
+  @HasMany(() => Address, 'userId')
   addresses?: Address[];
 
   @CreatedAt
@@ -75,7 +75,6 @@ export default class User extends Model {
 
   @BeforeDestroy
   static async destroyUserData(currentUser: User) {
-    // Destroy addresses
     const userAddresses = await Address.findAll({ where: { userId: currentUser.id } });
     userAddresses.forEach((address) => address.destroy());
   }

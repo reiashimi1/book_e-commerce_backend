@@ -6,8 +6,10 @@ import {
   PrimaryKey,
   IsUUID,
   CreatedAt,
-  UpdatedAt
+  UpdatedAt,
+  HasMany
 } from 'sequelize-typescript';
+import Order from './Order';
 
 @Table
 export default class Book extends Model {
@@ -35,7 +37,10 @@ export default class Book extends Model {
   pdfBase64?: string;
 
   @Column(DataType.DOUBLE)
-  price?: number;
+  price!: number;
+
+  @HasMany(() => Order, 'bookId')
+  orders?: Order[];
 
   @CreatedAt
   creationDate?: Date;

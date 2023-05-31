@@ -28,12 +28,17 @@ export const getAll: RequestHandler = async (req, res) => {
 export const createOrder: RequestHandler = async (req, res) => {
   try {
     const userId = req.params.id;
+    const user = await User.findOne({ where: { id: userId } });
+    if (!user) {
+      return res.status(404).send({ message: 'User does not exist' });
+    }
     const { bookId, addressId, totalAmount } = req.body;
     await Order.create({ userId, bookId, addressId, totalAmount });
     return res.status(200).send({
       message: 'Order created successfully'
     });
   } catch (e) {
+    console.log(e);
     return res.status(500).send(e);
   }
 };
@@ -41,7 +46,8 @@ export const createOrder: RequestHandler = async (req, res) => {
 export const updateOrderStatus: RequestHandler = async (req, res) => {
   try {
     const { id } = req.params;
-    const { totalAmount, shippingCost, status } = req.body;
+    const { bookPrice, shippingCost, status } = req.body;
+    const totalAmount = bookPrice + shippingCost;
     await Order.update({ totalAmount, shippingCost, status }, { where: { id } });
     return res.status(200).send({
       message: 'Order status updated successfully'

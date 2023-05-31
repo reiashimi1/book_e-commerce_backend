@@ -8,7 +8,8 @@ import {
   CreatedAt,
   UpdatedAt,
   ForeignKey,
-  BelongsTo
+  BelongsTo,
+  HasMany
 } from 'sequelize-typescript';
 import User from './User';
 
@@ -26,8 +27,11 @@ export default class Address extends Model {
   @Column(DataType.UUID)
   userId!: string;
 
-  @BelongsTo(() => User)
+  @BelongsTo(() => User, 'userId')
   user!: User;
+
+  @HasMany(() => Address, 'addressId')
+  addresses?: Address[];
 
   @Column(DataType.STRING)
   name?: string;

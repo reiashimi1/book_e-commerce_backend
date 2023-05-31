@@ -8,8 +8,7 @@ import {
   CreatedAt,
   UpdatedAt,
   BelongsTo,
-  ForeignKey,
-  HasOne
+  ForeignKey
 } from 'sequelize-typescript';
 import Book from './Book';
 import User from './User';
@@ -29,20 +28,21 @@ export default class Order extends Model {
   @Column(DataType.UUID)
   userId!: string;
 
-  @BelongsTo(() => User, 'id')
+  @BelongsTo(() => User, 'userId')
   user!: User;
 
-  @ForeignKey(() => User)
+  @ForeignKey(() => Book)
   @Column(DataType.UUID)
   bookId!: string;
 
-  @BelongsTo(() => Book, 'id')
+  @BelongsTo(() => Book, 'bookId')
   book!: Book;
 
-  @Column(DataType.STRING)
+  @ForeignKey(() => Address)
+  @Column(DataType.UUID)
   addressId?: string;
 
-  @HasOne(() => Address, 'id')
+  @BelongsTo(() => Address, 'addressId')
   address?: Address;
 
   @Column({
