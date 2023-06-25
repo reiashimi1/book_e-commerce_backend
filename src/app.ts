@@ -3,12 +3,14 @@ import express from 'express';
 import { json } from 'body-parser';
 import Routes from './routes';
 import dbConn from './models/index';
+import cors from 'cors';
 import User from './models/User';
 
 dotenv.config();
 const port = process.env.PORT || 3009;
 
 const app = express();
+app.use(cors());
 
 const sequelize = dbConn.getConnection();
 sequelize.sync().then(() => {

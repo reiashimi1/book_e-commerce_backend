@@ -5,9 +5,21 @@ import User from '../models/User';
 export const registerUser: RequestHandler = async (req, res) => {
   try {
     const { email, password, firstName, lastName } = req.body;
-    await User.create({ email, password, firstName, lastName, role: 'customer' });
+    const user = await User.create({ email, password, firstName, lastName, role: 'customer' });
+    const token = user.generateAccessToken();
+    user.token = token;
+    await user.save();
     return res.status(200).send({
-      message: 'User created successfully'
+      message: 'User created successfully',
+      data: {
+        token,
+        user: {
+          firstName: user.firstName,
+          lastName: user.lastName,
+          role: user.role,
+          email: user.email
+        }
+      }
     });
   } catch (e) {
     return res.status(500).send(e);
@@ -22,7 +34,18 @@ export const loginUser: RequestHandler = async (req, res) => {
       const token = user.generateAccessToken();
       user.token = token;
       await user.save();
-      return res.status(200).send({ message: 'User logged in successfully', token });
+      return res.status(200).send({
+        message: 'User logged in successfully',
+        data: {
+          token,
+          user: {
+            firstName: user.firstName,
+            lastName: user.lastName,
+            role: user.role,
+            email: user.email
+          }
+        }
+      });
     } else {
       return res.status(400).send({ message: 'Something went wrong' });
     }
@@ -57,12 +80,10 @@ export const getCurrentUser: RequestHandler = async (req, res) => {
     const user = await User.findOne({ where: { id } });
     if (user) {
       const { id, email, firstName, lastName, role, creationDate, updatedOn } = user;
-      return res
-        .status(200)
-        .json({
-          message: 'Success',
-          data: { user: { id, email, firstName, lastName, role, creationDate, updatedOn } }
-        });
+      return res.status(200).json({
+        message: 'Success',
+        data: { user: { id, email, firstName, lastName, role, creationDate, updatedOn } }
+      });
     } else {
       return res.status(404).json({ message: 'User not found' });
     }
