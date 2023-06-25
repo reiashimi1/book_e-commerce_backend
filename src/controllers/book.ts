@@ -10,10 +10,20 @@ export const getAll: RequestHandler = async (req, res) => {
   }
 };
 
+export const getOne: RequestHandler = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const book = await Book.findOne({ where: { id } });
+    return res.status(200).json({ message: 'Success', data: { book: book || {} } });
+  } catch (e) {
+    return res.status(500).send();
+  }
+};
+
 export const createBook: RequestHandler = async (req, res) => {
   try {
-    const { title, author, description, imageUrl, pdfBase64, price } = req.body;
-    await Book.create({ title, author, description, imageUrl, pdfBase64, price });
+    const { title, author, description, imageUrl, pdfBase64, rating, price } = req.body;
+    await Book.create({ title, author, description, imageUrl, pdfBase64, rating, price });
     return res.status(200).send({
       message: 'Book created successfully'
     });
@@ -25,9 +35,9 @@ export const createBook: RequestHandler = async (req, res) => {
 export const updateBook: RequestHandler = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, author, description, imageUrl, pdfBase64, price } = req.body;
+    const { title, author, description, imageUrl, pdfBase64, price, rating } = req.body;
     await Book.update(
-      { title, author, description, imageUrl, pdfBase64, price },
+      { title, author, description, imageUrl, pdfBase64, price, rating },
       { where: { id } }
     );
     return res.status(200).send({

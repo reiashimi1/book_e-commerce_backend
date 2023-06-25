@@ -51,6 +51,12 @@ export default class User extends Model {
   @Column(DataType.ENUM('customer', 'admin'))
   role!: 'customer' | 'admin';
 
+  @Column(DataType.TEXT)
+  profilePhotoUrl?: string;
+
+  @Column(DataType.STRING)
+  phoneNumber?: string;
+
   @HasMany(() => Order, 'userId')
   orders?: Order[];
 

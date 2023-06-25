@@ -32,8 +32,8 @@ export const createOrder: RequestHandler = async (req, res) => {
     if (!user) {
       return res.status(404).send({ message: 'User does not exist' });
     }
-    const { bookId, addressId, totalAmount } = req.body;
-    await Order.create({ userId, bookId, addressId, totalAmount });
+    const { bookId, addressId } = req.body;
+    await Order.create({ userId, bookId, addressId });
     return res.status(200).send({
       message: 'Order created successfully'
     });

@@ -30,8 +30,8 @@ export default class Address extends Model {
   @BelongsTo(() => User, 'userId')
   user!: User;
 
-  @HasMany(() => Address, 'addressId')
-  addresses?: Address[];
+  // @HasMany(() => Address, 'addressId')
+  // addresses?: Address[];
 
   @Column(DataType.STRING)
   name?: string;

@@ -27,13 +27,16 @@ export default class Book extends Model {
   @Column(DataType.STRING)
   author?: string;
 
-  @Column(DataType.STRING)
+  @Column(DataType.TEXT)
   description?: string;
 
-  @Column(DataType.STRING)
+  @Column(DataType.TEXT)
   imageUrl?: string;
 
   @Column(DataType.STRING)
+  rating?: string;
+
+  @Column(DataType.TEXT)
   pdfBase64?: string;
 
   @Column(DataType.DOUBLE)

@@ -39,6 +39,7 @@ export const loginUser: RequestHandler = async (req, res) => {
         data: {
           token,
           user: {
+            id: user.id,
             firstName: user.firstName,
             lastName: user.lastName,
             role: user.role,
