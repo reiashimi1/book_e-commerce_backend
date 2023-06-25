@@ -19,6 +19,6 @@ router.get('/orders/all', adminMiddleware, getAll);
 
 router.patch('/orders/:id/update', adminMiddleware, updateOrderStatus);
 
-// router.delete('/orders/:id/destroy', userMiddleware, destroyOrder);
+router.delete('/orders/:id/destroy', userMiddleware, destroyOrder);
 
 export default router;

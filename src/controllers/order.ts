@@ -1,13 +1,30 @@
 import { RequestHandler } from 'express';
 import User from '../models/User';
 import Order from '../models/Order';
+import Address from '../models/Address';
+import Book from '../models/Book';
 
 export const getUserOrders: RequestHandler = async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await User.findOne({ where: { id } });
+    const user = await User.findOne({
+      where: { id },
+      include: [
+        {
+          model: Order,
+          include: [Address, Book]
+        }
+      ]
+    });
+
     if (user) {
-      return res.status(200).json({ message: 'Success', data: { orders: user.orders || [] } });
+      const orderDetails = user.orders?.map((order) => ({
+        ...order.dataValues,
+        address: order.address,
+        book: order.book
+      }));
+
+      return res.status(200).json({ message: 'Success', data: { orders: orderDetails || [] } });
     } else {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -18,7 +35,7 @@ export const getUserOrders: RequestHandler = async (req, res) => {
 
 export const getAll: RequestHandler = async (req, res) => {
   try {
-    const orders = await Order.findAll();
+    const orders = await Order.findAll({ include: [User, Book, Address] });
     return res.status(200).json({ message: 'Success', data: { orders: orders || [] } });
   } catch (e) {
     return res.status(500).send(e);
